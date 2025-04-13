@@ -6,7 +6,7 @@ servers:
 info:
   description: Yandex Practicum «Film!» project api
   version: "1.0.0"
-  title: Afisha Api
+  title: Afisha api
   contact:
     email: aleksei-mart@yandex-team.ru
   license:

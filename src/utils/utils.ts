@@ -133,3 +133,13 @@ export function createElement<
     }
     return element;
 }
+
+/**
+*Проверяем, что все свойства из интерфейса существуют в объекте и их типы совпадают
+*/
+export function isObjectMatch<T>(obj: any, interfacePrototype: T): obj is T {
+    return Object.keys(interfacePrototype).every(key => {
+        const keyType = typeof interfacePrototype[key as keyof T]; // Тип из интерфейса
+        return typeof obj[key] === keyType;
+    });
+}
