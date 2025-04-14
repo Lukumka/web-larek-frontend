@@ -13,7 +13,6 @@ import { GalleryCardView } from '../ui/GalleryCardView';
 import { CartCardView } from '../ui/CartCardView';
 
 export class AppPresenter {
-	protected cartCards: IProduct;
 	constructor(
 		protected events: IEvents,
 		protected api: IAppApi,
@@ -52,7 +51,6 @@ export class AppPresenter {
 			this.modal.openModal(this.modalCardInstance.render(data, isInCart));
 		});
 
-
 		this.events.on(Events.CART.OPEN, () => {
 			this.modal.openModal(this.cartView.render());
 		});
@@ -74,7 +72,6 @@ export class AppPresenter {
 			this.cartView.update(items, data.totalPrice);
 			this.headerView.updateCartCounter(data.totalProducts);
 		})
-
 
 		this.events.on(Events.CART.SUBMIT, () => {
 			this.modal.renderContent(this.orderForm.render())
