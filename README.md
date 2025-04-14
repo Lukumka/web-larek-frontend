@@ -45,194 +45,211 @@ yarn build
 
 ## Данные и типы данных, используемые в приложении
 
-Продукт
+### Интерфейсы и типы
 
-```
-export interface IProduct {
-id: string;
-description: string;
-image: string;
-title: string;
-category:string;
-price: number | null;
-}
-```
+---
 
-Заказ
+#### `IProduct`
+Описывает структуру товара.
 
-```
-export interface IOrder {
-payment: TPaymentMethods;
-email: string;
-phone: string;
-address: string;
-total: number;
-items: string[];
-}
-```
+##### Поля:
+- `id: string` — уникальный идентификатор товара.
+- `description: string` — описание.
+- `image: string` — путь к изображению.
+- `title: string` — заголовок/название товара.
+- `category: string` — категория товара.
+- `price: number | null` — цена (может быть `null`, если товар "бесценен").
 
-Итерфейс для модели продуктов
+---
 
-```
-export interface IProductsModel {
-addProducts(cards: IProduct[]): void;
-getAllProducts(): IProduct[];
-getProductById(id: string): IProduct | undefined;
-clearProducts(): void;
-}
-```
+#### `TCartProduct`
+Тип для товара в корзине. Используется `Pick` из `IProduct`, включает:
+- `id`
+- `price`
 
-Интерфейс для модели корзины
+---
 
-```
-export interface ICartModel{
-products: Map<string, number>;
-totalPrice: number;
-totalProducts: number;
-addToCart(item: IProduct): void;
-removeFromCart(item: IProduct): void;
-clearCart(): void;
-getCartData(): Partial<IOrder>
-}
-```
+#### `IProductsModel`
+Модель списка товаров.
 
-Интерфейс для модели заказа
+##### Методы:
+- `addProducts(cards: IProduct[]): void` — добавляет товары.
+- `getAllProducts(): IProduct[]` — возвращает все товары.
+- `getProductById(id: string): IProduct | undefined` — получить товар по ID.
+- `getProductForCart(id: string): TCartProduct` — возвращает данные товара для корзины.
+- `clearProducts(): void` — очищает список товаров.
 
-```
-export interface IOrderModel {
-payment: TPaymentMethods;
-email: string;
-phone: string;
-address: string;
-total: number;
-items: string[];
-fullOrderData: IOrder;
-}
-```
+---
 
-Карточка продукта
+#### `ICartModel`
+Модель корзины.
 
-```
-export interface ICardView {
-readonly data: Partial<IProduct>;
-render(): HTMLElement;
-getGalleryCardView(element: HTMLElement): void;
-getModalCardView(element: HTMLElement): HTMLElement;
-}
-```
+##### Поля:
+- `products: Set<string>` — ID добавленных товаров.
+- `totalPrice: number` — сумма.
+- `totalProducts: number` — количество товаров.
 
-Контейнер для карточек
+##### Методы:
+- `addToCart(data: TCartProduct): void` — добавляет товар.
+- `removeFromCart(data: TCartProduct): void` — удаляет товар.
+- `clearCart(): void` — очищает корзину.
+- `getCartData(): { total: number; items: string[] }` — итоговые данные корзины.
 
-```
-export interface ICardsContainer {
-addCard(card: HTMLElement): void;
-addCards(cards: HTMLElement[]): void;
-clear(): void;
-catalog: HTMLElement[]; 
-}
-```
+---
 
-Модальное окно
+#### `IOrder`
+Данные для оформления заказа.
 
-```
-export interface IModalView {
-openModal(content:HTMLElement): void;
-closeModal(): void;
-clearModal(): void;
-renderContent(content: HTMLElement): void;
-}
-```
+##### Поля:
+- `payment: TPaymentMethods` — метод оплаты.
+- `email: string`
+- `phone: string`
+- `address: string`
+- `total: number`
+- `items: string[]` — ID товаров.
 
-Корзина
+---
 
-```
-export interface ICartView {
-addItem(item: HTMLElement, itemId: string, sum: number, items:number): void;
-removeItem(itemId: string, sum: number,items: number): void;
-clear(): void;
-render(): HTMLElement;
-}
-```
+#### `IOrderModel`
+Модель заказа.
 
-Базовая форма
+##### Поля:
+- `payment`, `email`, `phone`, `address`
 
-```
-export interface IFormView {
-getFieldValue(fieldName: string): string;
-getAllFieldsValues(): Record<string, string>;
-resetForm(): void;
-clearFields(): void;
-render(): HTMLFormElement;
-}
-```
+##### Методы:
+- `createFullOrder(items: string[], total: number): IOrder` — формирует итоговый объект заказа.
 
-Форма заказа
+---
 
-```
-export interface IOrderForm {
-selectPaymentMethod(method: string): void;
-resetForm(): void;
-render(): HTMLElement;
-}
-```
+#### `ICardView`
+Интерфейс базового представления карточки.
+- `render(data: Partial<IProduct>): HTMLElement`
 
-Форма контактов
+#### `IModalCardView`
+Интерфейс карточки для модального окна.
+- `render(data: Partial<IProduct>, isInCart: boolean): HTMLElement`
 
-```
-export interface IContactsForm {
-resetForm(): void;
-render(): HTMLElement;
-}
-```
+---
 
-Окно успешной покупки
+#### `IHeaderView`
+Интерфейс шапки сайта.
+- `updateCartCounter(count: number): void` — обновление счётчика.
 
-```
-export interface ISuccessView {
-render(sum:number): HTMLElement;
-}
-```
+---
 
-Методы оплаты
+#### `ICardsContainer`
+Контейнер для карточек.
 
-```
-export type TPaymentMethods = 'card' | 'on-delivery';
-```
+##### Методы:
+- `addCard(card: HTMLElement): void`
+- `addCards(cards: HTMLElement[]): void`
+- `clear(): void`
 
-Методы запросов
+##### Свойства:
+- `catalog: HTMLElement[]` — сеттер.
 
-```
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE' | 'PATCH' ;
-```
+---
 
-Базовое Апи
+#### `IModalView`
+Работа с модальным окном.
 
-```
-export interface IApi {
-baseUrl: string;
-get<T>(uri: string): Promise<T>;
-post<T>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
-}
-```
+##### Методы:
+- `openModal(content: HTMLElement): void`
+- `closeModal(): void`
+- `clearModal(): void`
+- `renderContent(content: HTMLElement): void`
 
-Тип получения запроса
+---
 
-```
-export interface IBaseProductData {
-total: number;
-items: IProduct[];
-}
-```
+#### `ICartView`
+Интерфейс корзины.
 
-Апи приложения
+##### Методы:
+- `clear(): void`
+- `render(): HTMLElement`
+- `update(cards: HTMLElement[], totalPrice: number): void`
 
-```
-export interface IAppApi {
-getProductList(): Promise<IBaseProductData>;
-getProduct(id: string): Promise<IProduct>;
-createOrder(order: IOrder): Promise<IOrder>;
-}
-```
+---
+
+#### `IFormView`
+Базовая форма.
+
+##### Методы:
+- `getFieldValue(fieldName: string): string`
+- `getAllFieldsValues(): Record<string, string>`
+- `resetForm(): void`
+- `clearFields(): void`
+- `render(): HTMLFormElement`
+
+---
+
+#### `IOrderForm`
+Форма заказа.
+
+##### Методы:
+- `selectPaymentMethod(method: string): void`
+- `resetForm(): void`
+- `render(): HTMLElement`
+
+---
+
+#### `IContactsForm`
+Форма контактов.
+
+##### Методы:
+- `resetForm(): void`
+- `render(): HTMLElement`
+
+---
+
+#### `ISuccessView`
+Отображение окна об успешном заказе.
+
+##### Метод:
+- `render(sum: number): HTMLElement`
+
+---
+
+#### `TPaymentMethods`
+Тип метода оплаты:
+- `'card'`
+- `'on-delivery'`
+
+---
+
+#### `ApiPostMethods`
+Методы HTTP-запросов:
+- `'POST'`, `'PUT'`, `'DELETE'`, `'PATCH'`
+
+---
+
+#### `IApi`
+Базовый API-клиент.
+
+##### Свойства:
+- `baseUrl: string`
+
+##### Методы:
+- `get<T>(uri: string): Promise<T>`
+- `post<T>(uri: string, data: object, method?: ApiPostMethods): Promise<T>`
+
+---
+
+#### `IBaseProductData`
+Тип ответа от сервера по товарам:
+- `total: number`
+- `items: IProduct[]`
+
+---
+
+#### `IAppApi`
+Основной API-прокси приложения.
+
+##### Методы:
+- `getProductList(): Promise<IBaseProductData>`
+- `getProduct(id: string): Promise<IProduct>`
+- `createOrder(order: IOrder): Promise<IOrder>`
+
 
 ## Архитектура приложения
 
