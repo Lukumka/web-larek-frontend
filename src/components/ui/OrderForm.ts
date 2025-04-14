@@ -12,6 +12,22 @@ export class OrderForm extends FormView implements IOrderForm {
 	constructor(template: string, events: IEvents) {
 		super(template, events);
 		this._inputs = this.inputs;
+
+
+		this.paymentButtonCard = this.element.querySelector('button[name="card"]');
+		this.paymentButtonOnDelivery = this.element.querySelector('button[name="cash"]');
+
+
+		this.paymentButtonCard.addEventListener('click', () => {
+			this.selectPaymentMethod('card');
+			this.inputHandler();
+		});
+
+		this.paymentButtonOnDelivery.addEventListener('click', () => {
+			this.selectPaymentMethod('on-delivery');
+			this.inputHandler();
+		});
+
 		this.element.addEventListener('submit', (event) => {
 			event.preventDefault();
 			if (this.validateForm()) {
@@ -22,20 +38,20 @@ export class OrderForm extends FormView implements IOrderForm {
 			}
 		});
 
-		this.paymentButtonCard = this.element.querySelector('button[name="card"]');
-		this.paymentButtonCard.addEventListener('click', (event) => {
-			this.selectPaymentMethod('card');
-		});
-		this.paymentButtonOnDelivery = this.element.querySelector(
-			'button[name="cash"]'
-		);
-		this.paymentButtonOnDelivery.addEventListener('click', (event) => {
-			this.selectPaymentMethod('on-delivery');
-		});
+
+		this.toggleSubmitButton(true);
+		this.updateErrors()
 	}
 
 	override validateForm(): boolean {
 		return super.validateForm() && this.isPaymentSelected();
+	}
+
+	override updateErrors() {
+		super.updateErrors();
+		if (!this.isPaymentSelected()) {
+			this.errorsConatiner.textContent = 'Пожалуйста выберите тип оплаты';
+		}
 	}
 
 	private isPaymentSelected(): boolean {
@@ -56,7 +72,7 @@ export class OrderForm extends FormView implements IOrderForm {
 		}
 	}
 
-	override resetForm (): void {
+	override resetForm(): void {
 		super.resetForm();
 		this.paymentButtonCard.classList.remove('button_alt-active');
 		this.paymentButtonOnDelivery.classList.remove('button_alt-active');
@@ -66,3 +82,4 @@ export class OrderForm extends FormView implements IOrderForm {
 		return super.render();
 	}
 }
+

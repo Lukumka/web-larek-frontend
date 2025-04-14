@@ -1,11 +1,9 @@
-import { Component } from '../base/Component';
 import { ICardsContainer } from '../../types';
 
-export class CardsContainer extends Component<ICardsContainer> implements ICardsContainer{
-	protected _catalog: HTMLElement;
-
-	constructor(protected container: HTMLElement) {
-		super(container);
+export class CardsContainer implements ICardsContainer{
+	protected container: HTMLElement;
+	constructor(container: HTMLElement) {
+		this.container = container;
 	}
 
 	addCard(card: HTMLElement) {

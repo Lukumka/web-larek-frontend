@@ -1,19 +1,19 @@
 import {
 	IAppApi,
 	ICardsContainer,
-	ICartModel, ICartView, IContactsForm,
+	ICartModel, ICartView, IContactsForm, IHeaderView, IModalCardView,
 	IModalView, IOrderForm,
 	IOrderModel,
 	IProduct,
 	IProductsModel, ISuccessView, TPaymentMethods,
 } from '../../types';
 import { IEvents } from '../base/events';
-import { CardView } from '../ui/CardView';
 import { Events } from '../../utils/constants';
+import { GalleryCardView } from '../ui/GalleryCardView';
+import { CartCardView } from '../ui/CartCardView';
 
 export class AppPresenter {
-	protected cardsInstances: CardView[];
-
+	protected cartCards: IProduct;
 	constructor(
 		protected events: IEvents,
 		protected api: IAppApi,
@@ -21,66 +21,62 @@ export class AppPresenter {
 		protected cartModel: ICartModel,
 		protected orderModel: IOrderModel,
 		protected cardsContainer: ICardsContainer,
+		protected modalCardInstance: IModalCardView,
 		protected modal: IModalView,
 		protected cartView: ICartView,
 		protected orderForm : IOrderForm,
 		protected contactsForm: IContactsForm,
 		protected successWindow: ISuccessView,
+		protected headerView: IHeaderView
 	) {
-		this.cardsInstances = []
 	}
 
 	initialize(): void {
 		this.api.getProductList()
 			.then((products) => {
+				console.log(products);
 				this.productsModel.addProducts(products.items);
 				const cards = this.productsModel.getAllProducts();
-
+				console.log(cards)
 				cards.forEach((data) => {
-					const cardInstance = new CardView(data, this.events);
-					this.cardsContainer.addCard(cardInstance.getGalleryCardView());
-					this.cardsInstances.push(cardInstance); // Сохраняем экземпляры карточек
+					console.log(13,data);
+					const card= new GalleryCardView(this.events).render(data)
+					this.cardsContainer.addCard(card);
 				});
 			});
 	}
 
 	setListeners(): void {
-		this.events.on(Events.CARD.PREVIEW, (data: { id: string }) => {
-			const cardInstance = this.cardsInstances.find(card => card.data.id === data.id);
-			if (cardInstance) {
-				const modalContent = cardInstance.getModalCardView();
-				this.modal.openModal(modalContent);
-			} else {
-				console.warn('Карточка не найдена по id:', data.id);
-			}
+		this.events.on(Events.CARD.PREVIEW, (data: IProduct) => {
+			const isInCart = this.cartModel.products.has(data.id); // products теперь Set<string>
+			this.modal.openModal(this.modalCardInstance.render(data, isInCart));
 		});
+
 
 		this.events.on(Events.CART.OPEN, () => {
 			this.modal.openModal(this.cartView.render());
 		});
 
-		this.events.on(Events.CART.ADD, (product: IProduct) => {
-			console.log(product);
-			this.cartModel.addToCart(product);
-		});
-
-		this.events.on(Events.CART.ITEM_ADDED, (data: { id: string, totalPrice: number, totalProducts: number }) => {
-			const cardInstance = this.cardsInstances.find(item => item.data.id === data.id);
-			this.cartView.addItem(cardInstance.getCartCardView(), data.id, data.totalPrice, data.totalProducts);
+		this.events.on(Events.CART.ADD, (data: {id:string}) => {
+			const item = this.productsModel.getProductForCart(data.id)
+			this.cartModel.addToCart(item);
 		});
 
 		this.events.on(Events.CART.REMOVE, (product: IProduct) => {
 			this.cartModel.removeFromCart(product);
 		});
 
-		this.events.on(Events.CART.ITEM_REMOVED, (data: { id: string, totalPrice: number, totalProducts: number }) => {
-			this.cartView.removeItem(data.id, data.totalPrice, data.totalProducts);
+		this.events.on(Events.CART.UPDATE, (data:{ cardsId: string[], totalPrice: number, totalProducts: number }) => {
+			const items = data.cardsId.map((id:string ,index:number) => {
+				const product = this.productsModel.getProductById(id);
+				return new CartCardView(this.events).render(product, index + 1);
+			});
+			this.cartView.update(items, data.totalPrice);
+			this.headerView.updateCartCounter(data.totalProducts);
 		})
 
+
 		this.events.on(Events.CART.SUBMIT, () => {
-		const cartData = this.cartModel.getCartData()
-			this.orderModel.items = cartData.items;
-			this.orderModel.total = cartData.total;
 			this.modal.renderContent(this.orderForm.render())
 		})
 
@@ -93,12 +89,13 @@ export class AppPresenter {
 		this.events.on(Events.CONTACTS.SUBMIT, (data: {email:string, phone:string}) => {
 			this.orderModel.email = data.email;
 			this.orderModel.phone = data.phone;
-			this.api.createOrder(this.orderModel.fullOrderData).then(
+			const cartData = this.cartModel.getCartData()
+			this.api.createOrder(this.orderModel.createFullOrder(cartData.items, cartData.total)).then(
 				result => {
 					this.modal.renderContent(this.successWindow.render(result.total))
 					this.cartModel.clearCart();
+					this.headerView.updateCartCounter(0)
 					this.cartView.clear();
-					this.cardsInstances.forEach(card => card.resetCartState());
 					this.orderForm.resetForm();
 					this.contactsForm.resetForm();
 				}

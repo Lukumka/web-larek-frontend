@@ -20,6 +20,7 @@ export class ContactsForm extends FormView implements IContactsForm {
 				this.events.emit(Events.CONTACTS.SUBMIT, this.getAllFieldsValues());
 			}
 		});
+		this.updateErrors();
 	}
 
 	override validateForm(): boolean {

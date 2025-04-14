@@ -1,5 +1,5 @@
 import { IEvents } from '../base/events';
-import { IProduct, IProductsModel } from '../../types';
+import { IProduct, IProductsModel, TCartProduct } from '../../types';
 import { Events } from '../../utils/constants';
 
 
@@ -21,6 +21,13 @@ export class ProductsModel implements IProductsModel {
 
 	getProductById(id: string): IProduct | undefined {
 		return this.cards.get(id);
+	}
+
+	getProductForCart(id: string): TCartProduct {
+		return {
+			id: id,
+			price: this.getProductById(id).price
+		}
 	}
 
 	clearProducts() {
