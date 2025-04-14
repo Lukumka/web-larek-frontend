@@ -33,12 +33,9 @@ export class AppPresenter {
 	initialize(): void {
 		this.api.getProductList()
 			.then((products) => {
-				console.log(products);
 				this.productsModel.addProducts(products.items);
 				const cards = this.productsModel.getAllProducts();
-				console.log(cards)
 				cards.forEach((data) => {
-					console.log(13,data);
 					const card= new GalleryCardView(this.events).render(data)
 					this.cardsContainer.addCard(card);
 				});
