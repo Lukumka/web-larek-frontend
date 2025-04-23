@@ -8,15 +8,14 @@ export abstract class FormView implements IFormView {
 	protected element: HTMLFormElement;
 	protected inputs: Record<string, HTMLInputElement> = {};
 	protected submitButton: HTMLButtonElement;
-	protected errorsConatiner: HTMLSpanElement;
+
 	constructor(template: string, events: IEvents) {
 		this.events = events;
 		this.element = cloneTemplate(template);
 
 		this.initializeFields();
-		this.errorsConatiner = this.element.querySelector('.form__errors');
 		this.submitButton = this.element.querySelector('button[type="submit"]');
-		this.toggleSubmitButton(true);
+		this.toggleSubmitButton(true); // Изначально кнопка отключена
 	}
 
 	protected initializeFields(): void {
@@ -31,7 +30,6 @@ export abstract class FormView implements IFormView {
 
 	protected inputHandler(): void {
 		this.toggleSubmitButton(!this.validateForm());
-		this.updateErrors();
 	}
 
 	protected validateForm(): boolean {
@@ -41,17 +39,6 @@ export abstract class FormView implements IFormView {
 	protected validateFields(): boolean {
 		return Object.values(this.inputs).every((input) => input.validity.valid && input.value.trim() !== '');
 	}
-
-  updateErrors(): void {
-		const invalidFields = Object.values(this.inputs).filter((input) => !input.validity.valid || !input.value.trim());
-
-		if (invalidFields.length > 0) {
-			this.errorsConatiner.textContent = 'Пожалуйста, заполните все обязательные поля корректно.';
-		} else {
-			this.errorsConatiner.textContent = '';
-		}
-	}
-
 
 	getFieldValue(fieldName: string): string {
 		return this.inputs[fieldName]?.value ?? '';

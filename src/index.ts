@@ -6,6 +6,7 @@ import { OrderModel } from './components/models/OrderModel';
 import { AppApi } from './components/api/AppApi';
 import { Api } from './components/base/api';
 import { API_URL} from './utils/constants';
+import { CardView } from './components/ui/CardView';
 import { ProductsModel } from './components/models/ProductsModel';
 import { AppPresenter } from './components/presenter/Presenter';
 import { CardsContainer } from './components/views/CardsContainer';
@@ -14,10 +15,6 @@ import { CartView } from './components/views/CartView';
 import { OrderForm } from './components/ui/OrderForm';
 import { ContactsForm } from './components/ui/ContactsForm';
 import { SuccessView } from './components/ui/SucessView';
-import { GalleryCardView } from './components/ui/GalleryCardView';
-import { ModalCardView } from './components/ui/ModalCardView';
-import { CartCardView } from './components/ui/CartCardView';
-import { HeaderView } from './components/ui/HeaderView';
 
 const events = new EventEmitter();
 
@@ -26,13 +23,12 @@ const url = API_URL;
 const baseApi = new Api(url);
 const api = new AppApi(baseApi,events)
 //Models
+const card = new CardView({}, events );
 const productsModel = new ProductsModel(events);
 const cartModel = new CartModel(events);
 const orderModel = new OrderModel(events);
 //View
-const headerView = new HeaderView(events);
 const cardsContainer = new CardsContainer(document.querySelector('.gallery'));
-const modalCardInstance = new ModalCardView(events)
 const modal = new ModalView(events);
 const cart = new CartView(events);
 const order = new OrderForm('#order', events);
@@ -49,13 +45,11 @@ const  appPresenter = new AppPresenter(
 	cartModel,
 	orderModel,
 	cardsContainer,
-	modalCardInstance,
 	modal,
 	cart,
 	order,
 	contacts,
-	successWindow,
-	headerView
+	successWindow
 );
 
 

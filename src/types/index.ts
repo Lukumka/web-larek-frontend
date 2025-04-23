@@ -7,27 +7,23 @@ export interface IProduct {
 	price: number | null;
 }
 
-export type TCartProduct = Pick<IProduct, 'id' | 'price'>
-
 export interface IProductsModel {
 	addProducts(cards: IProduct[]): void;
 	getAllProducts(): IProduct[];
 	getProductById(id: string): IProduct | undefined;
-	getProductForCart(id: string): TCartProduct;
 	clearProducts(): void;
 }
 
-export interface ICartModel {
-	products: Set<string>;
+
+export interface ICartModel{
+	products: Map<string, number>;				// пока под вопросом
 	totalPrice: number;
 	totalProducts: number;
-	addToCart(data: TCartProduct): void;
-	removeFromCart(data: TCartProduct): void;
+	addToCart(item: IProduct): void;
+	removeFromCart(item: IProduct): void;
 	clearCart(): void;
-	getCartData(): { total: number; items: string[] };
+	getCartData(): Partial<IOrder>
 }
-
-
 
 export interface IOrder {
 	payment: TPaymentMethods;
@@ -43,21 +39,17 @@ export interface IOrderModel {
 	email: string;
 	phone: string;
 	address: string;
-	createFullOrder(items: string[], total: number): IOrder
+	total: number;
+	items: string[];
+	fullOrderData: IOrder;
 }
 
 export interface ICardView {
-	render(data: Partial<IProduct>): HTMLElement;
+	readonly data: Partial<IProduct>;
+	render(): HTMLElement;
+	getGalleryCardView(element: HTMLElement): void;
+	getModalCardView(element: HTMLElement): HTMLElement;
 }
-
-export interface IModalCardView {
-	render(data: Partial<IProduct>, isInCart: boolean): HTMLElement;
-}
-
-export interface IHeaderView {
-	updateCartCounter(count: number): void;
-}
-
 
 export interface ICardsContainer {
 	addCard(card: HTMLElement): void;
@@ -74,9 +66,10 @@ export interface IModalView {
 }
 
 export interface ICartView {
+	addItem(item: HTMLElement, itemId: string, sum: number, items:number): void;
+	removeItem(itemId: string, sum: number,items: number): void;
 	clear(): void;
 	render(): HTMLElement;
-	update(cards:HTMLElement[], totalPrice: number): void;
 }
 
 export interface IFormView {

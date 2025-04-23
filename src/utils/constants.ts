@@ -12,15 +12,20 @@ export const Events = {
 	CART: {
 		ADD: 'cart:add',
 		REMOVE: 'cart:remove',
-		UPDATE: 'cart:update',
+		ITEM_ADDED: 'cart:item-added',
+		ITEM_REMOVED: 'cart:item-removed',
+		CLEARED: 'cart:cleared',
+		TOTAL_CHANGED: 'cart:total-changed',
 		OPEN: 'cart:open',
 		SUBMIT: 'cart:submit',
 	},
 	CARD: {
+		SHOW: 'card:show',
 		PREVIEW: 'card:preview',
 	},
 	MODAL: {
 		OPEN: 'modal:open',
+		CLOSE: 'modal:close',
 		RENDERED: 'modal:rendered',
 	},
 	ORDER: {
