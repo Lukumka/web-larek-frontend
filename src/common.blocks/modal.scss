@@ -1,16 +1,16 @@
-@use "variables" as *;
-@use "mixins";
+@use "../scss/variables" as *;
+@use "../scss/mixins";
 
 .modal {
-  @include mixins.sublayer;
-  // height: max-content;
-  position: absolute;
+  position: fixed;
+  inset: 0;
   display: none;
   justify-content: center;
+  align-items: center;
   background-color: $overlayBackground;
   z-index: 100;
-  padding-top: 5vh;
-  padding-bottom: 5vh;
+  padding: 5vh 2rem;
+  overflow-y: auto;
   box-sizing: border-box;
 
   &_active {
@@ -22,9 +22,12 @@
     @include mixins.flex(column);
     gap: $defaultPadding;
     background-color: $background;
-    // min-height: 90vmin;
     border-radius: 3rem;
     box-sizing: border-box;
+
+    width: 100%;
+    //max-width: 600px;
+    padding: $defaultPadding;
     position: relative;
   }
 
@@ -59,7 +62,7 @@
   }
 
   &__message {
-    white-space:nowrap;
+    white-space: nowrap;
     max-width: 60%;
     text-overflow: ellipsis;
     overflow: hidden;

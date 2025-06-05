@@ -5,8 +5,7 @@ import { CartModel } from './components/models/CartModel';
 import { OrderModel } from './components/models/OrderModel';
 import { AppApi } from './components/api/AppApi';
 import { Api } from './components/base/api';
-import { API_URL} from './utils/constants';
-import { CardView } from './components/ui/CardView';
+import { API_URL } from './utils/constants';
 import { ProductsModel } from './components/models/ProductsModel';
 import { AppPresenter } from './components/presenter/Presenter';
 import { CardsContainer } from './components/views/CardsContainer';
@@ -19,11 +18,9 @@ import { SuccessView } from './components/ui/SucessView';
 const events = new EventEmitter();
 
 //Api
-const url = API_URL;
-const baseApi = new Api(url);
+const baseApi = new Api(API_URL);
 const api = new AppApi(baseApi,events)
 //Models
-const card = new CardView({}, events );
 const productsModel = new ProductsModel(events);
 const cartModel = new CartModel(events);
 const orderModel = new OrderModel(events);
@@ -34,9 +31,6 @@ const cart = new CartView(events);
 const order = new OrderForm('#order', events);
 const contacts = new ContactsForm('#contacts', events);
 const successWindow = new SuccessView(events);
-events.onAll((event) => {
-	console.log(event.eventName, event.data)
-})
 
 const  appPresenter = new AppPresenter(
 	events,

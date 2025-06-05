@@ -1,19 +1,18 @@
-# Проектная работа "Веб-ларек"
+<a id="readme-top"></a>
+# Web-larek
+#
+## [Ссылка на проект](https://web-larek.lukumka-dev.ru/)
+#
+<img  style="width: 100%; border-radius: 2px; display: block" src="https://files.lukumka-dev.ru/web-larek.png" alt="Demo" width="300">
 
-Стек: HTML, SCSS, TS, Webpack
+#### Web Larek — это веб-приложение, представляющее собой онлайн-каталог товаров с возможностью просмотра карточек продуктов, добавления в корзину и оформления заказа.
+## Технологии
 
-Структура проекта:
-- src/ — исходные файлы проекта
-- src/components/ — папка с JS компонентами
-- src/components/base/ — папка с базовым кодом
+* [![TypeScript][TypeScript]][TypeScript-url]
+* [![SASS][SASS]][SASS-url]
+* [![Webpack][Webpack]][Webpack-url]
 
-Важные файлы:
-- src/pages/index.html — HTML-файл главной страницы
-- src/types/index.ts — файл с типами
-- src/index.ts — точка входа приложения
-- src/scss/styles.scss — корневой файл стилей
-- src/utils/constants.ts — файл с константами
-- src/utils/utils.ts — файл с утилитами
+<p align="right">(<a href="#readme-top">наверх</a>)</p>
 
 ## Установка и запуск
 Для установки и запуска проекта необходимо выполнить команды
@@ -546,3 +545,19 @@ createOrder(order: IOrder): Promise<IOrder>;
 - `cart:item-added` — Генерируется при добавлении товара в корзину. Передаются `id`, `totalPrice`, `totalProducts`.
 - `cart:item-removed` — Генерируется при удалении товара из корзины. Передаются `id`, `totalPrice`, `totalProducts`.
 - `products:update` — Генерируется при добавлении или очистке продуктов. Содержит текущее состояние Map<string, IProduct>.
+
+<!-- Бейджи -->
+[React]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[TypeScript]: https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=FFFFFF&color=3178C6
+[Redux]: https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=FFFFFF&color=764ABC
+[ReactRouter]: https://img.shields.io/badge/ReactRouter-101010?style=for-the-badge&logo=reactrouter&logoColor=CA4245
+[Webpack]: https://img.shields.io/badge/Webpack-8DD6F9?style=for-the-badge&logo=webpack&logoColor=FFFFFF&color=8DD6F9
+[SASS]: https://img.shields.io/badge/SASS-CC6699?style=for-the-badge&logo=sass&logoColor=FFF&color=CC6699
+
+<!-- Ссылки -->
+[React-url]: https://reactjs.org/
+[TypeScript-url]: https://www.typescriptlang.org/
+[Redux-url]: https://redux.dev/
+[ReactRouter-url]: https://reactrouter.com/
+[Webpack-url]: https://webpack.js.org/
+[SASS-url]: https://sass-lang.com/

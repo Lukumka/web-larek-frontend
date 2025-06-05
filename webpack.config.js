@@ -1,7 +1,9 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { DefinePlugin } = require('webpack');
 const TerserPlugin = require("terser-webpack-plugin");
@@ -10,7 +12,7 @@ require('dotenv').config({
   path: path.join(process.cwd(), process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env')
 });
 
-const isProduction = process.env.NODE_ENV == "production";
+const isProduction = process.env.NODE_ENV === "production";
 
 const stylesHandler = MiniCssExtractPlugin.loader;
 
@@ -28,7 +30,10 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "src/pages/index.html"
+      template: "src/pages/index.html",
+    }),
+    new CopyPlugin({
+      patterns: [{ from: './src/public/favicon.ico', to: 'favicon.ico' }]
     }),
 
     new MiniCssExtractPlugin(),

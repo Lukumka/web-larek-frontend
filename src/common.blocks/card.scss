@@ -1,6 +1,5 @@
-@use "variables" as *;
-@use "mixins";
-
+@use "../scss/variables" as *;
+@use "../scss/mixins";
 .card {
   @include mixins.flex(column);
   border: 0;
